@@ -1,4 +1,4 @@
-package org.crp.flowable.aiprediction;
+package org.crp.aiflow;
 
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -8,7 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
 @ActiveProfiles({"test"})
-class AipredictionApplicationTests {
+class AiFlowApplicationTests {
 
 	@Test
 	void contextLoads() {

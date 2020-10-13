@@ -1,6 +1,6 @@
-package org.crp.flowable.aiprediction;
+package org.crp.aiflow;
 
-import org.crp.flowable.aiprediction.services.AiPredictionTaskService;
+import org.crp.aiflow.services.AiPredictionTaskService;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 import org.flowable.spring.boot.EngineConfigurationConfigurer;
 import org.springframework.boot.SpringApplication;
@@ -10,15 +10,15 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication(proxyBeanMethods = false)
-public class AipredictionApplication extends SpringBootServletInitializer {
+public class AiFlowApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(AipredictionApplication.class, args);
+        SpringApplication.run(AiFlowApplication.class, args);
     }
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(AipredictionApplication.class);
+        return builder.sources(AiFlowApplication.class);
     }
 
     @Bean

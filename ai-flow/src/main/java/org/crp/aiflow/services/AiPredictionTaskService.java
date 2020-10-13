@@ -1,4 +1,4 @@
-package org.crp.flowable.aiprediction.services;
+package org.crp.aiflow.services;
 
 import org.flowable.engine.impl.TaskServiceImpl;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
