@@ -1,0 +1,2 @@
+# Auto Configuration Import Filters
+org.springframework.boot.autoconfigure.AutoConfigurationImportFilter=\

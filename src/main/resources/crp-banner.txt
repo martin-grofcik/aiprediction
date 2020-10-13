@@ -1,0 +1,8 @@
+  ___   _ __   _ __
+ / __| | '__| | '_ \
+| (__  | |    | |_) |
+ \___| |_|    | .__/
+              | |
+              |_|
+
+::AI prediction: ${app.version}  :: Flowable :: (v${flowable.version})    :: Spring Boot :: ${spring-boot.formatted-version}
