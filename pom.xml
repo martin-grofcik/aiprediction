@@ -14,9 +14,13 @@
     <artifactId>ai-flow-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <org.apache.spark.spark-core.version>3.0.1</org.apache.spark.spark-core.version>
+        <org.apache.spark.spark-mllib.version>3.0.1</org.apache.spark.spark-mllib.version>
+    </properties>
+
     <modules>
         <module>ai</module>
-
         <module>ai-flow</module>
     </modules>
 </project>
