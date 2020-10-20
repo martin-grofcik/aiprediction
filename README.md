@@ -15,8 +15,31 @@ passwd: test
 ## ai
 The module for the ai implementation.
 
+### How to get request to spark and the results from spark
+* [install spark & hadoop]() - description in the discussion thread
+* [install kafka](https://kafka.apache.org/quickstart)
+* create 2 topics in/out
+```
+kafka-topics.bat --create --topic in --bootstrap-server localhost:9092
+kafka-topics.bat --create --topic out --bootstrap-server localhost:9092
+```  
+* compile and run ``JavaStructuredKafkaWordCount`` example
+```
+$ mvn clean package
+$ spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.1 --class org.crp.aiflow.ml.JavaStructuredKafkaWordCount target\ai-0.0.1-SNAPSHOT-jar-with-dependencies.jar localhost:
+9092 subscribe in out
+```
+* run producer and consumer
+```
+kafka-console-producer.bat --topic in --bootstrap-server localhost:9092
+kafka-console-consumer.bat --from-beginning --topic out -bootstrap-server localhos
+```
+
+
 ## ai-flow
 Spring boot flowable application.  
+
+[How to integrate with kafka](https://blog.flowable.org/2020/03/24/flowable-business-processing-from-kafka-events/)
 
 ### Reference Documentation
 For further reference, please consider the following sections:

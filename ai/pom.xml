@@ -13,6 +13,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <properties>
+        <scala.binary.version>2.12</scala.binary.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.apache.spark</groupId>
@@ -24,6 +27,18 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-mllib_2.12</artifactId>
             <version>${org.apache.spark.spark-mllib.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming-kafka-0-10_${scala.binary.version}</artifactId>
+            <version>${org.apache.spark.spark-core.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql-kafka-0-10_${scala.binary.version}</artifactId>
+            <version>${org.apache.spark.spark-core.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
