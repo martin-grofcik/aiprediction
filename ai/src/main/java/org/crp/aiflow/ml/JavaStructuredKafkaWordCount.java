@@ -1,15 +1,14 @@
 package org.crp.aiflow.ml;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.MapFunction;
+import org.apache.spark.mllib.classification.LogisticRegressionModel;
+import org.apache.spark.mllib.linalg.Vector;
+import org.apache.spark.mllib.linalg.Vectors;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
-import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.streaming.StreamingQuery;
 
 import java.util.Arrays;
-import java.util.Properties;
 
 /**
  * Consumes messages from one or more topics in Kafka and does wordcount.
@@ -51,6 +50,9 @@ public final class JavaStructuredKafkaWordCount {
             .builder()
             .appName("JavaStructuredKafkaWordCount")
             .getOrCreate();
+    spark.sparkContext().setLogLevel("ERROR");
+
+    LogisticRegressionModel sameModel = LogisticRegressionModel.load(spark.sparkContext(), "model-89\\logistic-regression");
 
     // Create DataSet representing the stream of input lines from kafka
     Dataset<String> lines = spark
@@ -62,36 +64,33 @@ public final class JavaStructuredKafkaWordCount {
             .selectExpr("CAST(value AS STRING)")
             .as(Encoders.STRING());
 
-    // Generate running word count
-    Dataset<Row> wordCounts = lines.flatMap(
-            (FlatMapFunction<String, String>) x -> Arrays.asList(x.split(" ")).iterator(),
-            Encoders.STRING()).groupBy("value").count();
-
-    // Start running the query that prints the running counts to the console
-    StreamingQuery query = wordCounts.writeStream()
-            .outputMode("complete")
+    lines.map((MapFunction<String, String>) s -> {
+      double amount = getAmount(s);
+      double currency =  getCurrency(s);
+      Vector newData = Vectors.dense(new double[]{amount,currency});
+      double prediction = sameModel.predict(newData);
+      return "{ \"approval\" : " + (prediction != 0.0) + "}";
+    }, Encoders.STRING()).writeStream()
+            .outputMode("append")
             .format("kafka")
             .option("kafka.bootstrap.servers", bootstrapServers)
             .option("topic", "out")
             .option("checkpointLocation", "c:/tmp/spark/checkpoint")
-            .start();
-
-    query.awaitTermination();
+            .start()
+            .awaitTermination();
   }
 
-  private static KafkaProducer<String, Integer> createProducer(String brokers) {
-    Properties props = new Properties();
-    props.put("bootstrap.servers", brokers);
-    props.put("acks", "all");
-    props.put("retries", 0);
-    props.put("batch.size", 16384);
-    props.put("linger.ms", 1);
-    props.put("buffer.memory", 33554432);
-    props.put("key.serializer",
-            "org.apache.kafka.common.serialization.StringSerializer");
-
-    props.put("value.serializer",
-            "org.apache.kafka.common.serialization.IntegerSerializer");
-    return new KafkaProducer<>(props);
+  private static double getAmount(String s) {
+    return Double.parseDouble(
+            Arrays.stream(s.split(",")).filter(subString -> subString.contains("amount")).findFirst().
+            map( amountString -> amountString.substring( amountString.indexOf(":")+1)).orElse("0.0")
+    );
   }
+  private static double getCurrency(String s) {
+    return Arrays.stream(s.split(",")).filter(subString -> subString.contains("currency")).findFirst()
+            .map( amountString -> amountString.substring( amountString.indexOf(":")+3, amountString.length() -3))
+            .map( currency -> "EUR".equals(currency) ? 0.0 : ("USD".equals(currency) ? 1.0 : ("CHF".equals(currency) ? 2.0 : 3.0)))
+            .orElse(3.0);
+  }
+
 }

@@ -98,11 +98,10 @@ public class MachineLearningApp {
         // 7.2. Model Loading
         LogisticRegressionModel sameModel = LogisticRegressionModel.load(sc.sc(), "model\\logistic-regression");
         // 7.3. Prediction on New Data
-        predict(sameModel, new double[]{0.0,1.0,3.0,0.0});
-        predict(sameModel, new double[]{1.0,0.0,3.0,0.0});
-        predict(sameModel, new double[]{2.0,2.0,2.0,1.0});
-        predict(sameModel, new double[]{2.0,4.0,2.0,1.0});
-        predict(sameModel, new double[]{2.0,2.0,3.0,0.0});
+        predict(sameModel, new double[]{1.3700000000000003,0.0}); //,true
+        predict(sameModel, new double[]{14.169999999999742,2.0}); //,true
+        predict(sameModel, new double[]{14.26999999999974,0.0}); //,false
+        predict(sameModel, new double[]{14.329999999999739,0.0}); //,false
 
         // 8. Clean-up
         sc.close();
